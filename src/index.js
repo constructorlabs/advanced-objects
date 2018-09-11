@@ -1,4 +1,7 @@
 const teaBagsLeft = teaBags => {
+  return Object.values(teaBags).reduce((acc,item) =>{
+    return acc+item;
+  })
   // function receives an object where keys are names of tea types
   // and values are the number of teaBags we have of that type.
 
@@ -6,6 +9,8 @@ const teaBagsLeft = teaBags => {
 }
 
 const shoppingList = (previousShoppingList, newShoppingList) => {
+  return Object.assign({},previousShoppingList, newShoppingList);
+
   // function receives two shopping list objects
   // a shopping list has items names as keys and the number of items required as values
 
@@ -15,6 +20,11 @@ const shoppingList = (previousShoppingList, newShoppingList) => {
 }
 
 const footballResults = (results) => {
+  const teams=Object.keys(results);
+  return teams.map( item =>{
+    return `${item} has ${results[item]} points`;
+
+  })
   // function receives an object called results
   // results has football team names as keys and their number of points as values
   // {
@@ -35,6 +45,10 @@ const footballResults = (results) => {
 }
 
 const convertBookArrayToMap = books => {
+
+  const booksMap = {};
+  books.forEach(item => booksMap[item.id] = item);
+  return booksMap;
   // the function receives an array of books where each book has an id, author, title and year
 
   // for example
@@ -62,6 +76,11 @@ const convertBookArrayToMap = books => {
 }
 
 const dogCount = dogs => {
+  const dogLoc={};
+  dogs.forEach(item => {
+    dogLoc[item.location]===undefined? dogLoc[item.location]=1:dogLoc[item.location]++
+    })
+  return dogLoc;
   // function receives an array of dogs, each dog has a name and location
   // for example
   // {
@@ -77,6 +96,11 @@ const dogCount = dogs => {
 }
 
 const dogNames = dogs => {
+  const dogNameArray = {};
+  dogs.forEach(item => {
+    dogNameArray[item.location]===undefined ? dogNameArray[item.location] = [item.name] :
+    dogNameArray[item.location].push(item.name);})
+  return dogNameArray;
   // function receives an array of dogs, each dog has a name and location
   // for example
   // {
@@ -90,6 +114,12 @@ const dogNames = dogs => {
 }
 
 const fruitMarket = boxes => {
+  const fruitTotal={};
+  boxes.forEach(item => {
+    fruitTotal[item.contents]===undefined ? fruitTotal[item.contents] = item.number :
+    fruitTotal[item.contents] += item.number;
+  })
+  return fruitTotal;
   // function receives an array of fruit box objects.
   // each fruit box object has a name and number of contents
   // for example
@@ -103,6 +133,23 @@ const fruitMarket = boxes => {
 }
 
 const averageFruitPerBox = boxes => {
+  const fruitTotal={};
+  boxes.forEach(item => {
+    if (fruitTotal[item.contents]===undefined) {
+      fruitTotal[item.contents] = [item.number,1];
+    }
+    else {
+      fruitTotal[item.contents][0] += item.number;
+      fruitTotal[item.contents][1]++;
+    }
+  });
+  const fruitNames = Object.keys(fruitTotal);
+  const fruitTotalAvg = {};
+  fruitNames.forEach(item => {
+    fruitTotalAvg[item] = fruitTotal[item][0]/fruitTotal[item][1];
+  });
+  return fruitTotalAvg;
+
   // function receives an array of fruit box objects.
   // each fruit box object has a contents and number property
   // for example
@@ -118,6 +165,12 @@ const averageFruitPerBox = boxes => {
 /* STRETCH GOALS */
 
 const footballResultsWithObject = (teams, results) => {
+  const newObj = {};
+  const keys = Object.keys(teams);
+  keys.forEach(item => {
+    newObj[teams[item]] = results[item];
+  })
+  return newObj;
   // function receives two parameters:
   // 1. an object where which contains football team ids as keys and team names as values
   // 2. object which contains football team ids as keys and how many points the team has as values
@@ -128,6 +181,13 @@ const footballResultsWithObject = (teams, results) => {
 }
 
 const footballResultsWithArray = (teams, results) => {
+  const kateTeam={};
+  const ids=Object.keys(results);
+  ids.forEach(item => {
+    const myObj = teams.find(item2 => item2.id==item);
+    kateTeam[myObj.name]=results[item];
+  });
+  return kateTeam;
   // function receives two parameters:
   // 1. array of football team objects
   // 2. object which contains football team ids as keys and how many points the team has as values
@@ -138,6 +198,17 @@ const footballResultsWithArray = (teams, results) => {
 }
 
 const stockMarket = prices => {
+  const result = {};
+  prices.forEach( item => {
+    if (result[item.ticker]===undefined) {result[item.ticker]=[item.price];}
+    else {result[item.ticker].push(item.price);}
+  });
+  const minMax = {};
+  const tickers = Object.keys(result);
+  tickers.forEach(item => {
+    minMax[item] = {min: Math.min(...result[item]), max: Math.max(...result[item])};
+  })
+  return minMax;
   // function receives an array of share prices produced during the day
   // each share price is an object which has a ticker and a price property.
 
@@ -149,6 +220,14 @@ const stockMarket = prices => {
 }
 
 const calculateOrderPrice = (menu, order) => {
+  const orders = Object.keys(order);
+  let total=0;
+  orders.forEach(item => {
+    total+=menu[item]*order[item];
+
+  })
+  return total;
+
   // function receives two parameters: `menu` and `order`
 
   // menu has item names as keys and prices as values
@@ -159,6 +238,22 @@ const calculateOrderPrice = (menu, order) => {
 
 
 const calculateOrderPriceWithType = (menu, order, type) => {
+  const orders = Object.keys(order);
+  let total=0;
+  orders.forEach(item => {
+    total+=menu[item]*order[item];
+
+  })
+  const calc = {
+    eatIn() {
+      return 1.1*total;
+    },
+    takeAway() {
+      return 5+total;
+    }
+  };
+  return calc[type]();
+
   // function receives three parameters: `menu`, `order` and `type`
 
   // menu has item names as keys and prices as values
